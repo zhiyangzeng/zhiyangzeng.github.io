@@ -1,114 +1,252 @@
-<!-- <div id="tfheader">
-    <form id="tfnewsearch">
-        <input type="text" class="tftextinput" id="tftextinput" name="q" size="21" maxlength="120"><input type="submit" value="search" class="tfbutton">
-    </form>
-<div class="tfclear"></div>
-</div>
-
-<script>
-    var a = document.getElementById('tfnewsearch');
-    a.addEventListener('submit',function(e) {
-        e.preventDefault();
-        var b = document.getElementById('tftextinput').value;
-        result='http://b079b3f3.ngrok.io/solr/gettingstarted/select?indent=on&wt=json&q='+b;
-        console.log(result)
-
-    });
-
-</script> -->
-
+<!DOCTYPE html>
 <html>
-<head>
-<title>Solr Ajax Example</title>
-<script language="Javascript">
-// derived from http://www.degraeve.com/reference/simple-ajax-example.php
-
-function createCORSRequest(method, url) {
-  var xhr = new XMLHttpRequest();
-  if ("withCredentials" in xhr) {
-
-    // Check if the XMLHttpRequest object has a "withCredentials" property.
-    // "withCredentials" only exists on XMLHTTPRequest2 objects.
-    xhr.open(method, url, true);
-
-  } else if (typeof XDomainRequest != "undefined") {
-
-    // Otherwise, check if XDomainRequest.
-    // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
-    xhr = new XDomainRequest();
-    xhr.open(method, url,true);
-
-  } else {
-
-    // Otherwise, CORS is not supported by the browser.
-    xhr = null;
-
-  }
-  return xhr;
-}
-
-function xmlhttpPost() {
-    var xmlHttpReq = false;
-    var self = this;
-    if (window.XMLHttpRequest) { // Mozilla/Safari
-        self.xmlHttpReq = new createCORSRequest('POST','https://c1e045d0.ngrok.io/solr/gettingstarted/select');
-    }
-    else if (window.ActiveXObject) { // IE
-        self.xmlHttpReq = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    // self.xmlHttpReq.open('POST', strURL, true);
-    self.xmlHttpReq.setRequestHeader('Access-Control-Allow-Origin', '*');    
-    self.xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    self.xmlHttpReq.onreadystatechange = function() {
-        if (self.xmlHttpReq.readyState == 4) {
-            updatepage(self.xmlHttpReq.responseText);
-        }
-    }
-
-    var params = getstandardargs().concat(getquerystring());
-    var strData = params.join('&');
-    self.xmlHttpReq.send(strData);
-}
-
-function getstandardargs() {
-    var params = [
-        'wt=json'
-        , 'indent=on'
-        , 'hl=true'
-        , 'hl.fl=name,features'
-        ];
-
-    return params;
-}
-function getquerystring() {
-  var form = document.forms['f1'];
-  var query = form.query.value;
-  qstr = 'q=' + escape(query);
-  return qstr;
-}
-
-// this function does all the work of parsing the solr response and updating the page.
-function updatepage(str){
-  document.getElementById("raw").innerHTML = str;
-  var rsp = eval("("+str+")"); // use eval to parse Solr's JSON response
-  var html= "<br>numFound=" + rsp.response.numFound;
-  var first = rsp.response.docs[0];
-  html += "<br>product name="+ first.name;
-  var hl=rsp.highlighting[first.id];
-  if (hl.name != null) { html += "<br>name highlighted: " + hl.name[0]; }
-  if (hl.features != null) { html += "<br>features highligted: " + hl.features[0]; }
-  document.getElementById("result").innerHTML = html;
-}
-</script>
-</head>
+<title>Yelp Tripping</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 <body>
 
-<form name="f1" onsubmit='xmlhttpPost(); return false;'>
-  <p>query: <input name="query" type="text">
-  <input value="Go" type="submit"></p>
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <ul class="w3-navbar w3-white w3-wide w3-padding-8 w3-card-2">
+    <li>
+      <a href="#home" class="w3-margin-left"><b>Home</b></a>
+    </li>
+    <!-- Float links to the right. Hide them on small screens -->
+    <li class="w3-right w3-hide-small">
+      <a href="#Introduction" class="w3-left">Introduction</a>
+      <a href="#Initial" class="w3-left">Initial Question</a>
+      <a href="#Further" class="w3-left">Further Exploration</a>
+      <a href="#Classification" class="w3-left">Classification</a>
+      <a href="#Final" class="w3-left">Final Analysis</a>
+      <a href="#Application" class="w3-left w3-margin-right">Application</a>
+      <a href="#Notebook" class="w3-left w3-margin-right">Notebook</a>
+    </li>
+  </ul>
+</div>
 
-<div id="result"></div>
-<p/><pre>HELLO3 Raw JSON String: <div id="raw"></div></pre>
-</form>
+<!-- Header -->
+<header class="w3-display-container w3-content w3-wide" style="max-width:1500px;" id="home">
+  <img class="w3-image" src="w3images/cali.jpg" alt="Architecture" width="1500" height="800">
+  <div class="w3-display-middle w3-margin-top w3-center">
+    <h1 class="w3-xxlarge"><span class="w3-border w3-border-black w3-padding">Yelp</span> <span class="w3-hide-small">Analysis</span></h1>
+  </div>
+</header>
+
+<!-- Page content -->
+<div class="w3-content w3-padding" style="max-width:1564px">
+
+  <!-- Introduction Section -->
+  <div class="w3-container w3-padding-32" id="Introduction">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-12">Introduction</h3>
+    <p>Yelp is becoming a popular way to find great local businesses. From restaurant to medical service, people can easily obtain helpful information from Yelp reviews. Using Yelp can help people easily find the service that meet their expectation.
+    </p>
+    <h4>Motivation</h4>
+    <p>Have you ever gone to a restaurant based on its Yelp rating or after reading a rave review only to feel upset because the food quality did not meet your 5-star gourmet expectations. You may wonder whether some reviews are just advertisements. Is it possible that restaurants invite people to write fake reviews or create fake accounts themselves? Does those who wrote reviews have the the same taste as yours? We analyzed these questions and used the publicly available Yelp Academic Dataset to classify users based on their credibility.
+    </p>
+    <h4>Dataset</h4>
+    <p>Our dataset is from Yelp Dataset Challenge. The dataset contains 5 JavaScript Object Notation (JSON) files. We transformed JSON files to csv files so that we can apply Python Pandas to analyze the dataset.
+    </p>
+
+  </div>
+
+  <!-- Initial Question Section -->
+  <div class="w3-container w3-padding-32" id="Initial">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-12">Initial Question</h3>
+    <p>Our initial vision was to use Yelp Dataset to build a recommender that would read a user's profile. Then some data science magic would happen, and the recommender would provide your ideal vacation plan. Sounds great right? All the travel agency's savings from firing their travel agents would undoubtedly be transferred to the consumer, so we’d also have unexpensive vacations too. For now, those shifty travel agents can keep their jobs; creating a recommendation system from text features in the Yelp dataset proved too difficult for several reasons.
+    </p>
+    <p>Our next action plan was simple. Discover the Yelp Dataset, dig deep and find interesting connections. We realized that our data only allowed us to take two tracks: analyze business or analyze user. Hence, we dug deeper into both kinds of data and came up with number of question before we decided to evaluate user data in greater detail.
+    </p>
+    <h4>Explore business dataset</h4>
+    <p>Q: How many categories does Yelp reviews have?
+    </p>
+    <p>A: Not just restaurants! Yelp reviews include plenty of categories of business. There are 4318 unique categories in Yelp reviews. There are 22 main categories. Top 5 categories of bussiness are:
+    </p>
+    <img src="images/category_yelp.png" alt="category_yelp" style="width:75%">
+
+    <p>Q: What is the rating distribution in the Yelp reviews?</p>
+    <p>A: Yelp users usually gave a high rating to local businesses. Among all the reviewed business in Yelp: 51.3% of businesses have at least a 4-star rating. The rating is high!</p>
+    <img src="images/rating_distribution.png" alt="rating_distribution" style="width:75%">
+
+    <p>Q: How many business are rated as 5-stars?</p>
+    <p>A: 12,964 business have a 5-star rating. The mean value of the star rating in the reviewed business are 3.69.</p>
+    <img src="images/star_business.png" alt="star_business" style="width:75%">
+
+    <p>Q: What is the star distribution for each main category?</p>
+    <p>A: The averge star rating is also high for each state. Rhineland-Palatinate, the GERMANY city, has the highest rating. </p>
+    <img src="images/star_category.png" alt="star_category" style="width:75%">
+
+    <p>Q: What is the average star rating for each state?</p>
+    <p>A: The averge star rating is also high for each state. Rhineland-Palatinate, the GERMANY city, has the highest rating. </p>
+    <img src="images/star_state.png" alt="star_state" style="width:75%">
+  </div>
+
+
+  <!-- Classification Section -->
+  <div class="w3-container w3-padding-32" id="Further">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-12">Further Exploration</h3>
+    <p>While the data about businesses was good, it was constrained by the location. The Yelp dataset is composed using a few cities, some cities being outside USA. Hence making a general statement about any type of business would have been an exaggeration. On the other hand, user behavior is not affected too drastically by location, allowing us to make sweeping analyses. While analyzing business data we realized that the star ratings on Yelp are generally high. This made us question how credible are they? The histogram of average star ratings given out by users shows that users tend to rate on the extremes. The high bars on 1 and 5 stars, even after fitting the normal distribution, indicates this behavior.
+    </p>
+    <img src="images/reviewStars.png" alt="reviewStars" style="width:75%">
+    <p><b>Stars appear should be normally distributed. However, the outliers are at 1-star and 5-star.</b></p> 
+    <p>This lead us to think about classifying Yelp users. Which user is most credible? Who gives the most relevant and genuine feedback on businesses? Who should we follow to get the best returns? To find that, we plotted the average star ratings of each user against multiple user attributes as seen in the graphs below.</p>
+
+    <img src="images/Star_vs_UserAttr.jpg" alt="Star_vs_UserAttr" style="width:75%">
+    <p>The resulting graphs were very similar. Reliable users give out between 3 to 5 stars in general. This probably happened because the attributes usefulness, coolness and funniness are highly correlated as shown by the graphs below.</p>
+    <img src="images/vsFunny.jpg" alt="vsFunny" style="width:75%">
+    <p><b>This analysis lead us to conduct some feature engineering and create a classifier to find the best Yelp users.</b></p>
+
+  </div>
+
+
+
+    <!-- Classification Section -->
+  <div class="w3-container w3-padding-32" id="Classification">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-12">Classification</h3>
+    <h4>Random Forest Classifier</h4>
+    <p>Is it possible to classify users into elite and normal classes? We first tried a random forest classifier to see if learning over a small subset of features produced any promising results. The results are somewhat promising however we noticed something interesting. The ratio of elite users to normal users is about 35,000 to 460,000 users! The dataset is incredibly unbalanced, roughly a ratio of 1:20, meaning that only 5% of all users are labeled elite. This poses a major problem for any flavor of classifier. To illustrate the issue at hand, consider a degenerate classifier that guesses every user is a normal user. What an awful classifier! Unfortunately, applying this classifier will yield an accuracy of about 95%. Sampling techniques such as oversampling and undersampling can combat unbalanced data sets, however scikit's classifiers have a class weight parameter that computes the ratio of classes to one another and assigns a weight according to each classes frequency. Using the correct class weight, we expect that the acccuracy of the classifier will decrease because it will no longer overfit the data by stupidly guessing normal for all cases, thus making the classifier more generalizeable.
+    </p>
+
+    <h4>Feature Importances</h4>
+    <p>Now that we have a reasonably well-trained and accurate classifier we can look at the imporant features in our classification model and what their impact is on our analysis. Steve McQueen, a.k.a. the king of cool, would be pleased to find that the most important aspect of being an elite user member is that you are cool! Coming in at a whopping 23.2% being cool is the cat's pjyamas, the bee's knees, the... You get the idea. Being cool is fairly meaningful but that is not the only imporant feature users should have. Other featurs are less surprising: review count, number of fans. Surprisingly in this model, the number of fans, and friends did not rank in the top 5 as we believed they were.
+    </p>
+    <img src="images/feature_RandomForest.png" alt="feature_RandomForest" style="width:75%">
+
+    <h4>Extra Trees Classifier</h4>
+    <p>The extra trees classifier gave different importances for each feature, but the accuracy for this model is comparable to the random forest classifier. The feature importances of this model were more consistent with the way elite users are elected according to yelp so it was chosen as the preferred model. The most important features, the number of fans, the review count, and the reviews considered useful, matches our intuition about what makes a user elite or popular. Those that publish many useful reviews are likely to have many fans or followers that respect the users opinion giving them credibilty.
+    </p>
+    <img src="images/feature_ExtraTree.png" alt="feature_ExtraTree" style="width:75%">
+
+    <h4>Unbalanced Datasets</h4>
+    <p>To illustrate the issue at hand, consider a degenerate classifier that guesses every user is a normal user. What an awful classifier! Unfortunately, applying this classifier will yield an accuracy of about 95%. Sampling techniques such as oversampling and undersampling can combat unbalanced data sets, however scikit's classifiers have a class weight parameter that computes the ratio of classes to one another and assigns a weight according to each classes frequency. Using the correct class weight, we expect that the accuracy of the classifier will decrease because it will no longer overfit the data by stupidly guessing normal for all cases, thus making the classifier more generalizable.
+    </p>
+     <b>The feature importances vary somewhat as shown in the bar chart however the fans feature clearly dominates many of the trees in the ensemble.</b>
+     <p></p>
+
+     <h4>Social network of the top 20 elite users</h4>
+     <p>Red dots = top twenty elite users.</p>
+     <p>To check the validity of our classifier, we generated a social network graph of the top elite user that our classfier found. In the above graph, the red dots are the top twenty people that have the highest elite scores. The graph clearly shows how these elite users are at cardinal nodes that connect large groups of people. These elite users also had some of the highest Closeness Centrality value in the graph.</p>
+     <img src="images/spring_20_elite.png" alt="spring_20_elite" style="width:75%">
+    
+   
+
+  </div>
+
+    <!-- Final Section -->
+  <div class="w3-container w3-padding-32" id="Final">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-12">Final Analysis</h3>
+    
+    <h4>Quantifying a measure of Elitism</h4>
+    <p>Using the feature importances from the classifier we decided to delve deeper into creating a score for the reliability or credibility of the user. The score is calculated by vectorizing the classifier weights, and the numeric features for each user, and computing the inner product. This produces a linear metric based on the values of the important features and each user that we will investigate further.
+    </p>
+    <p>Using basic statistics we can see that there are several outliers in the elite data set that are skewing the mean to the right towards the outliers. The 75% quartile is greater than the mean which is indicative of outliers distorting the mean as a measure of centrality. Rather than throwing out the outlier from the dataset, they were truncated to three times the standard deviation.</p>
+    
+    <h4>How close are you to being worthy of the elite class?</h4>
+    <p>To measure how far away a user is from being elite, we first need to determine the score cuttoff for elitism. We could take the absolute minimum, median, mean, or a more advanced measure to determine the liklihood that a user is eilte or near the threshold. One idea is to try and fit a distribution to the scores of elite users and see if they also follow a normal distribution. This would allow for a probability of being elite to be calculated for all users not just the elite ones!</p>
+    <p>Again the way the scores are distributed among the elite users is frustrating! It looks almost like a normal or a skew normal distribution but a number of outliers are causing the distribution.</p>
+
+    <h4>Scoring standardization, normalization</h4>
+    <p>Since we are assuming normality for our custom scoring system, it would be helpful if our score was on a 0 to 1 scale. The two standard procedures for doing so are standardization and normalization, however standardization was favored to avoid negative score values. The outliers and users more than one standard deviation from the mean still greatly affect the distribution of the score.</p>
+     <img src="images/standardizedEliteUserHistogram.png" alt="standardizedEliteUserHistogram" style="width:75%">
+
+    <h4>Log scoring</h4>
+    <p>Taking the log of the score smoothed out the dramatic fluctuation in scores as many of the more popular users experience exponential growth in their scores of elitism. Solely among the elite users we see that their scores are normally distributed about the mean score of 4.1. For normal users we see that a power law distribution emerges, which matches our intuition about the number of elite users relative to the overall user base.</p>
+    <img src="images/AllUsersLogScore.png" alt="AllUsersLogScore" style="width:75%">
+    <img src="images/EliteUserLogScore.png" alt="EliteUserLogScore" style="width:75%">
+
+    <p>The log score is then standardized and fit to a normal distribution. Now that we have a normal distribution that gives the probability that a user is an elite user. This measure of elitism can also be used as a credibility or reliability score as elite users in addition to being superstars are the only verified users included in the data set; they have to be nominated and re-nominated every year.</p>
+    <img src="images/EliteUserLogScore_normalized.png" alt="EliteUserLogScore_normalized" style="width:75%">
+  </div>
+
+    <!-- Application Section -->
+  <div class="w3-container w3-padding-32" id="Application">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-12">Application</h3>
+    <p>asdasdf
+    </p>
+  </div>
+
+    <!-- Notebook Section -->
+  <div class="w3-container w3-padding-32" id="Notebook">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-12">Youtube Video and Python Notebook</h3>
+    <b>Here is our <a href="https://www.youtube.com/watch?v=GYxs9k4uxps">video</a>. </b><br>
+    <b>Here is our <a href="https://github.com/zhiyangzeng/zhiyangzeng.github.io/blob/master/YelpDatasetAnalysis.ipynb">notebook</a>.</b>
+    <p>
+    </p>
+  </div>
+
+
+<!--   <div class="w3-row-padding">
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <div class="w3-display-container">
+        <div class="w3-display-topleft w3-black w3-padding">Summer House</div>
+        <img src="/w3images/house5.jpg" alt="House" style="width:100%">
+      </div>
+    </div>
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <div class="w3-display-container">
+        <div class="w3-display-topleft w3-black w3-padding">Brick House</div>
+        <img src="/w3images/house2.jpg" alt="House" style="width:100%">
+      </div>
+    </div>
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <div class="w3-display-container">
+        <div class="w3-display-topleft w3-black w3-padding">Renovated</div>
+        <img src="/w3images/house3.jpg" alt="House" style="width:100%">
+      </div>
+    </div>
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <div class="w3-display-container">
+        <div class="w3-display-topleft w3-black w3-padding">Barn House</div>
+        <img src="/w3images/house4.jpg" alt="House" style="width:100%">
+      </div>
+    </div>
+  </div> -->
+
+ <!--  <div class="w3-row-padding">
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <div class="w3-display-container">
+        <div class="w3-display-topleft w3-black w3-padding">Summer House</div>
+        <img src="/w3images/house2.jpg" alt="House" style="width:99%">
+      </div>
+    </div>
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <div class="w3-display-container">
+        <div class="w3-display-topleft w3-black w3-padding">Brick House</div>
+        <img src="/w3images/house5.jpg" alt="House" style="width:99%">
+      </div>
+    </div>
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <div class="w3-display-container">
+        <div class="w3-display-topleft w3-black w3-padding">Renovated</div>
+        <img src="/w3images/house4.jpg" alt="House" style="width:99%">
+      </div>
+    </div>
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <div class="w3-display-container">
+        <div class="w3-display-topleft w3-black w3-padding">Barn House</div>
+        <img src="/w3images/house3.jpg" alt="House" style="width:99%">
+      </div>
+    </div>
+  </div>
+ -->
+ 
+  
+<!-- End page content -->
+</div>
+
+
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-16">
+  <p>Powered by <a href="http://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+</footer>
+
+<!-- Add Google Maps -->
+<script src="https://maps.googleapis.com/maps/api/js"></script>
+
+<script>
+
+</script>
+
 </body>
 </html>
+
