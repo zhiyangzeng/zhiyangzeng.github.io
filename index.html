@@ -36,7 +36,7 @@ function createCORSRequest(method, url) {
     // Otherwise, check if XDomainRequest.
     // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
     xhr = new XDomainRequest();
-    xhr.open(method, url);
+    xhr.open(method, url,true);
 
   } else {
 
@@ -47,11 +47,11 @@ function createCORSRequest(method, url) {
   return xhr;
 }
 
-function xmlhttpPost(strURL) {
+function xmlhttpPost() {
     var xmlHttpReq = false;
     var self = this;
     if (window.XMLHttpRequest) { // Mozilla/Safari
-        self.xmlHttpReq = new createCORSRequest('POST','http://c1e045d0.ngrok.io/solr/gettingstarted/select');
+        self.xmlHttpReq = new createCORSRequest('POST','https://c1e045d0.ngrok.io/solr/gettingstarted/select');
     }
     else if (window.ActiveXObject) { // IE
         self.xmlHttpReq = new ActiveXObject("Microsoft.XMLHTTP");
@@ -102,12 +102,12 @@ function updatepage(str){
 </head>
 <body>
 
-<form name="f1" onsubmit='xmlhttpPost("https://c1e045d0.ngrok.io/solr/gettingstarted/select"); return false;'>
+<form name="f1" onsubmit='xmlhttpPost(); return false;'>
   <p>query: <input name="query" type="text">
   <input value="Go" type="submit"></p>
 
 <div id="result"></div>
-<p/><pre>Raw JSON String: <div id="raw"></div></pre>
+<p/><pre>HELLO Raw JSON String: <div id="raw"></div></pre>
 </form>
 </body>
 </html>
