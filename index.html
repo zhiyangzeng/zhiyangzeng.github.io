@@ -26,9 +26,9 @@
 
 <!-- Header -->
 <header class="w3-display-container w3-content w3-wide" style="max-width:1500px;" id="home">
-  <img class="w3-image" src="w3images/cali.jpg" alt="Architecture" width="1500" height="800">
+  <img class="w3-image" src="images/food.jpg" alt="Architecture" width="1500" height="800">
   <div class="w3-display-middle w3-margin-top w3-center">
-    <h1 class="w3-xxlarge"><span class="w3-border w3-border-black w3-padding">Yelp</span> <span class="w3-hide-small">Analysis</span></h1>
+    <h1 class="w3-xxlarge" style="color:#FFFFFF"><span class="w3-border w3-border-white w3-padding">Yelp</span> <span class="w3-hide-small">Analysis</span></h1>
   </div>
 </header>
 
@@ -160,8 +160,30 @@
     <!-- Application Section -->
   <div class="w3-container w3-padding-32" id="Application">
     <h3 class="w3-border-bottom w3-border-light-grey w3-padding-12">Application</h3>
-    <p>The application is built using 
+    <p>Other than the star rating of a restaurant, we want to know whether the rating is up-to-date. We use a pseudo-time-series data to help investigate the trendiness of a restaurant. The time data is measured in days passed since a very early date (01-01-2000) and the independent variable is the stars. After performing a linear regression on the data, the slope of the regression will be a measure of the restaurant’s trendiness, with unit Δstar/day. With this information users can find out whether a restaurant has been improving, stagnant, or getting worse, and can make better decisions. However, the data is not intuitive to display. To help with the comparison, we can use a probability density function.
     </p>
+    <p>
+    Using a probability density function can help users find out where a score stands comparing to the population. If a trending score is 0.02, it might not look impressive. However, a user can see that it is ranked higher than 99% of the businesses. Indeed, this is equal to nearly a 1 star improvement to a business rating every 3 months. Below is the distribution of a business' trendiness. Using the same method, the average star and average custom score also has been calculated to show their standings in the population.
+    </p>
+    <img src="images/SlopeDistribution.jpg" alt="slope" style="width:55%">
+    <p>
+    A big criticism of Yelp is that the rating of a business is solely determined by users, many of whom too inexperienced to accurately judge the quality of said business. Pro or elite membership on Yelp is usually awarded based on the quantity and quality of the reviews given by the user. The important question becomes whether elite Yelp members judge restaurant better than non-pro members. To do that we calculate the score discrepancies between users (pro and non-pro) and the average rating of a restaurant.
+    </p>
+    <img src="images/final_score_discrep.png" alt="pnp" style="width:75%">
+    <p>
+    Knowing that elite users can score a restaurant closer to its true average, we can use this to our advantage and generate a weighted score with emphasis on user eliteness. Doing so will allow us to generate scores that is more reliable. Instead of relying solely on the Yelp rating, we can combine the new score with the trendiness to give a better representation of ratings.</p>
+    <p>
+    To illustrate the effectiveness of the application, we built a search application which retrieves a list of restaurants along with the information above to help users make better decisions. The back-end of the application is based on Apache Solr. The start page of the application is below:
+    </p>
+    <img src="images/appstart.png" alt="app1" style="width:55%">
+    <p>After clicking "Go", it retrieves a list of restaurants as below: </p>
+    <img src="images/app2.png" alt="app2" style="width:55%">
+    <br><br>
+    <p>This is another example of retrieved restaurants:</p>
+    <br><br>
+    <img src="images/app3.png" alt="app3" style="width:55%">
+    <p>As we can see above, Pho Nhu Y has a relatively low score (among bottom 10%), but because many elite users rated this restaurants highly, our system gives it a score of 4.4, among the top 30%</p>
+
   </div>
 
     <!-- Notebook Section -->
